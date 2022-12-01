@@ -4,12 +4,12 @@ local Remap = require("mmm.keymap")
 local nnoremap = Remap.nnoremap
 local inoremap = Remap.inoremap
 
-local sumneko_root_path = "/home/work/.local/bin"
-local sumneko_binary = sumneko_root_path .. "/bin/lua-language-server"
+-- local sumneko_root_path = "/home/work/.local/bin"
+-- local sumneko_binary = sumneko_root_path .. "/bin/lua-language-server"
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
-capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 require 'cmp'.setup {
     sources = {
@@ -157,7 +157,9 @@ require("lspconfig").tailwindcss.setup({
     capabilities = capabilities,
 })
 
-
+require("lspconfig").prismals.setup({
+    capabilities = capabilities,
+})
 
 -- who even uses this?
 require("lspconfig").rust_analyzer.setup({
@@ -188,7 +190,7 @@ require("lspconfig").rust_analyzer.setup({
 })
 
 require("lspconfig").sumneko_lua.setup({
-    cmd = { sumneko_binary, "-E", sumneko_root_path .. "/main.lua" },
+    -- cmd = { sumneko_binary, "-E", sumneko_root_path .. "/main.lua" },
     settings = {
         Lua = {
             runtime = {
