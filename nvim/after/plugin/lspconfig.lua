@@ -48,28 +48,24 @@ cmp.setup({
         ['<C-d>'] = cmp.mapping.scroll_docs(4),
         ['<C-Space>'] = cmp.mapping.complete(),
         ['<C-e>'] = cmp.mapping.close(),
+        ["<tab>"] = cmp.config.disable,
         --       ['<CR>'] = cmp.mapping.confirm {
         --          behavior = cmp.ConfirmBehavior.Replace,
         --          select = true,
         --      },
-        ['`'] = function(fallback)
-            if cmp.visible() then
-                cmp.select_next_item()
-            elseif luasnip.expand_or_jumpable() then
-                luasnip.expand_or_jump()
-            else
-                fallback()
-            end
-        end,
-        ['<`>'] = function(fallback)
-            if cmp.visible() then
-                cmp.select_prev_item()
-            elseif luasnip.jumpable(-1) then
-                luasnip.jump(-1)
-            else
-                fallback()
-            end
-        end,
+        -- ['`'] = function(fallback)
+        --     if cmp.visible() then
+        --         cmp.select_next_item()
+        --     elseif luasnip.expand_or_jumpable() then
+        --         luasnip.expand_or_jump()
+        --     else
+        --         fallback()
+        --     end
+        -- end,
+        -- ['<C-h>'] = function()
+        --     luasnip.jumpable(-1)
+        --         luasnip.jump(-1)
+        -- end,
     }),
     formatting = {
         -- Youtube: How to set up nice formatting for your sources.
@@ -84,7 +80,6 @@ cmp.setup({
             },
         },
     },
-
     -- formatting = {
     -- 	format = function(entry, vim_item)
     -- 		vim_item.kind = lspkind.presets.default[vim_item.kind]
@@ -160,6 +155,9 @@ require("lspconfig").tailwindcss.setup({
 require("lspconfig").prismals.setup({
     capabilities = capabilities,
 })
+require("lspconfig").emmet_ls.setup({
+    capabilities = capabilities,
+})
 
 -- who even uses this?
 require("lspconfig").rust_analyzer.setup({
@@ -189,7 +187,7 @@ require("lspconfig").rust_analyzer.setup({
     --]]
 })
 
-require("lspconfig").sumneko_lua.setup({
+require("lspconfig").lua_ls.setup({
     -- cmd = { sumneko_binary, "-E", sumneko_root_path .. "/main.lua" },
     settings = {
         Lua = {
@@ -220,7 +218,6 @@ local opts = {
     -- or you just hate the highlight
     -- default: true
     highlight_hovered_item = true,
-
     -- whether to show outline guides
     -- default: true
     show_guides = true,
@@ -228,22 +225,6 @@ local opts = {
 
 require("symbols-outline").setup(opts)
 
--- local snippets_paths = function()
--- 	local plugins = { "friendly-snippets" }
--- 	local paths = {}
--- 	local path
--- 	local root_path = vim.env.HOME .. "/.vim/plugged/"
--- 	for _, plug in ipairs(plugins) do
--- 		path = root_path .. plug
--- 		if vim.fn.isdirectory(path) ~= 0 then
--- 			table.insert(paths, path)
--- 		end
--- 	end
--- 	return paths
--- end
-
--- require("luasnip.loaders.from_vscode").lazy_load({
--- 	paths = snippets_paths(),
--- 	include = nil, -- Load all languages
--- 	exclude = {},
--- })
+vim.diagnostic.config({
+    virtual_text = true
+})
