@@ -145,31 +145,31 @@ cmp.setup({
 -- end
 
 
-require("lspconfig").tsserver.setup({
-    capabilities = capabilities,
-})
-require("lspconfig").tailwindcss.setup({
-    capabilities = capabilities,
-})
+-- require("lspconfig").tsserver.setup({
+--     capabilities = capabilities,
+-- })
+-- require("lspconfig").tailwindcss.setup({
+--     capabilities = capabilities,
+-- })
 
-require("lspconfig").prismals.setup({
-    capabilities = capabilities,
-})
-require("lspconfig").emmet_ls.setup({
-    capabilities = capabilities,
-})
+-- require("lspconfig").prismals.setup({
+--     capabilities = capabilities,
+-- })
+-- require("lspconfig").emmet_ls.setup({
+--     capabilities = capabilities,
+-- })
 
--- who even uses this?
-require("lspconfig").rust_analyzer.setup({
-    -- cmd = { "rustup", "run", "nightly", "rust-analyzer" },
-    capabilities = capabilities,
-    settings = {
-        rust = {
-            unstable_features = true,
-            build_on_save = false,
-            all_features = true,
-        },
-    }
+-- -- who even uses this?
+-- require("lspconfig").rust_analyzer.setup({
+--     -- cmd = { "rustup", "run", "nightly", "rust-analyzer" },
+--     capabilities = capabilities,
+--     settings = {
+--         rust = {
+--             unstable_features = true,
+--             build_on_save = false,
+--             all_features = true,
+--         },
+--     }
     -- settings = {
     -- ["rust-analyzer"] = {
     -- cargo = {
@@ -185,32 +185,32 @@ require("lspconfig").rust_analyzer.setup({
     --[[
     --
     --]]
-})
+-- })
 
-require("lspconfig").lua_ls.setup({
-    -- cmd = { sumneko_binary, "-E", sumneko_root_path .. "/main.lua" },
-    settings = {
-        Lua = {
-            runtime = {
-                -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-                version = "LuaJIT",
-                -- Setup your lua path
-                path = vim.split(package.path, ";"),
-            },
-            diagnostics = {
-                -- Get the language server to recognize the `vim` global
-                globals = { "vim" },
-            },
-            workspace = {
-                -- Make the server aware of Neovim runtime files
-                library = {
-                    [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-                    [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
-                },
-            },
-        },
-    },
-})
+-- require("lspconfig").lua_ls.setup({
+--     -- cmd = { sumneko_binary, "-E", sumneko_root_path .. "/main.lua" },
+--     settings = {
+--         Lua = {
+--             runtime = {
+--                 -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+--                 version = "LuaJIT",
+--                 -- Setup your lua path
+--                 path = vim.split(package.path, ";"),
+--             },
+--             diagnostics = {
+--                 -- Get the language server to recognize the `vim` global
+--                 globals = { "vim" },
+--             },
+--             workspace = {
+--                 -- Make the server aware of Neovim runtime files
+--                 library = {
+--                     [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+--                     [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
+--                 },
+--             },
+--         },
+--     },
+-- })
 
 local opts = {
     -- whether to highlight the currently hovered symbol
