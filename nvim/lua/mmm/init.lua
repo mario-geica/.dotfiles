@@ -1,6 +1,8 @@
 require("mmm.set")
 require("mmm.packer")
 require("mmm.nvimtree")
+require("mmm.debugger")
+-- require("mmm.dap")
 
 local augroup = vim.api.nvim_create_augroup
 ThePrimeagenGroup = augroup('ThePrimeagen', {})

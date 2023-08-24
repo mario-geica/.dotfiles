@@ -6,7 +6,7 @@ return require("packer").startup(function()
         requires = {
             'kyazdani42/nvim-web-devicons', -- optional, for file icons
         },
-        tag = 'nightly'                 -- optional, updated every week. (see issue #1193)
+        tag = 'nightly'                     -- optional, updated every week. (see issue #1193)
     }
     use("sbdchd/neoformat")
     use {
@@ -39,8 +39,11 @@ return require("packer").startup(function()
     use("saadparwaiz1/cmp_luasnip")
     use("hrsh7th/cmp-nvim-lsp-signature-help")
 
-
+    use("github/copilot.vim")
     use('tpope/vim-commentary')
+    use('tpope/vim-fugitive')
+    use('mbbill/undotree')
+    use('lewis6991/gitsigns.nvim')
 
 
     use("rafamadriz/friendly-snippets")
@@ -63,23 +66,59 @@ return require("packer").startup(function()
         "williamboman/mason-lspconfig.nvim",
     }
     use({
-        "glepnir/lspsaga.nvim",
-        opt = true,
-        branch = "main",
-        event = "LspAttach",
+        'nvimdev/lspsaga.nvim',
+        after = 'nvim-lspconfig',
         config = function()
-            require("lspsaga").setup({})
+            require('lspsaga').setup({})
         end,
-        requires = {
-            { "nvim-tree/nvim-web-devicons" },
-            --Please make sure you install markdown and markdown_inline parser
-            { "nvim-treesitter/nvim-treesitter" }
-        }
     })
+    --use({
+    --    "glepnir/lspsaga.nvim",
+    --    -- opt = true,
+    --    -- branch = "main",
+    --    -- event = "LspAttach",
+    --    config = function()
+    --        require("lspsaga").setup({})
+    --    end,
+    --    requires = {
+    --        { "nvim-tree/nvim-web-devicons" },
+    --        --Please make sure you install markdown and markdown_inline parser
+    --        { "nvim-treesitter/nvim-treesitter" }
+    --    }
+    --})
     --use("nvim-treesitter/playground")
     --use("romgrk/nvim-treesitter-context")
-
-    --use("mfussenegger/nvim-dap")
-    --use("rcarriga/nvim-dap-ui")
-    --use("theHamsta/nvim-dap-virtual-text")
+    -- use {
+    --   "mfussenegger/nvim-dap",
+    --   opt = true,
+    --   module = { "dap" },
+    --   requires = {
+    --     "theHamsta/nvim-dap-virtual-text",
+    --     "rcarriga/nvim-dap-ui",
+    --     "mfussenegger/nvim-dap-python",
+    --     "nvim-telescope/telescope-dap.nvim",
+    --     { "leoluz/nvim-dap-go", module = "dap-go" },
+    --     { "jbyuki/one-small-step-for-vimkind", module = "osv" },
+    --     { "mxsdev/nvim-dap-vscode-js", module = { "dap-vscode-js" } },
+    --     {
+    --       "microsoft/vscode-js-debug",
+    --       opt = true,
+    --       run = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out"
+    --     },
+    --   },
+    -- config = function()
+    --   require("config.dap").setup()
+    -- end,
+    -- disable = false,
+    -- }
+    use("David-Kunz/jester")
+    use("mfussenegger/nvim-dap")
+    use { "mxsdev/nvim-dap-vscode-js", requires = { "mfussenegger/nvim-dap" } }
+    use {
+        "microsoft/vscode-js-debug",
+        opt = true,
+        run = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out"
+    }
+    use("theHamsta/nvim-dap-virtual-text")
+    use { "rcarriga/nvim-dap-ui", requires = { "mfussenegger/nvim-dap" } }
 end)

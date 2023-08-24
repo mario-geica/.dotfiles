@@ -7,6 +7,7 @@ local nmap = Remap.nmap
 
 
 nnoremap("<leader>fc", ":Neoformat<CR>")
+nnoremap("<leader>sv", ":source $MYVIMRC<CR>")
 
 nnoremap("<leader><Right>", ":NvimTreeToggle<CR>")
 nnoremap("<leader>tt", ":NvimTreeToggle<CR>")
@@ -45,7 +46,7 @@ nnoremap("<leader>gca", ":Lspsaga code_action<CR>")
 nnoremap("<leader>gh", ":Lspsaga hover_doc<CR>")
 nnoremap("<leader>gcd", ":Lspsaga peek_definition<CR>")
 -- nnoremap ("<leader>gsd"  , ":Lspsaga show_line_diagnostics<CR>")
-nnoremap ("<leader>gee"  , ":Lspsaga diagnostic_jump_next<CR>")
+-- nnoremap ("<leader>gee"  , ":lua vim.diagnostic.goto_next()<CR>")
 nnoremap("<leader>grn", ":Lspsaga rename<CR>")
 -- nnoremap("<leader>grn", ":lua vim.lsp.buf.rename()<CR>")
 
@@ -56,10 +57,10 @@ nnoremap("<leader>hh",":lua vim.lsp.buf.signature_help()<CR>")
 -- nnoremap("<leader>grn",":lua vim.lsp.buf.rename()<CR>")
 nnoremap("<leader>gh", ":lua vim.lsp.buf.hover()<CR>")
 nnoremap("<leader>ca", ":lua vim.lsp.buf.code_action()<CR>")
-nnoremap("<leader>gsd",":lua vim.diagnostic.show()<CR>")
+nnoremap("<leader>ds",":lua vim.diagnostic.show()<CR>")
 nnoremap("<leader>gfc", ":lua vim.lsp.buf.format()<CR>")
 
--- nnoremap("<leader>gee", ":lua vim.diagnostic.goto_next()<CR>")
+nnoremap("<leader>gee", ":lua vim.diagnostic.goto_next()<CR>")
 nnoremap("<leader>gm", ":lua vim.diagnostic.goto_prev()<CR>")
 --nnoremap("<leader>sd",":lua vim.diagnostic.open_float()<CR>")
 --
