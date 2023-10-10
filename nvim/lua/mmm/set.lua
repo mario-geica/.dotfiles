@@ -1,4 +1,5 @@
 vim.opt.guicursor = ""
+vim.opt.clipboard="unnamedplus"
 vim.opt.wrap = true
 
 vim.opt.nu = true
