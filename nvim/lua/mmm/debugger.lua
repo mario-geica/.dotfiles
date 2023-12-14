@@ -74,6 +74,22 @@ for _, language in ipairs(js_based_languages) do
             internalConsoleOptions = "neverOpen",
         },
         {
+            type = "pwa-node",
+            request = "launch",
+            name = "Debug Jest File",
+            -- trace = true, -- include debugger info
+            runtimeExecutable = "node",
+            runtimeArgs = {
+                "./node_modules/jest/bin/jest.js",
+                "--runInBand",
+                "${file}"
+            },
+            -- rootPath = "${workspaceFolder}",
+            cwd = "${workspaceFolder}",
+            console = "integratedTerminal",
+            internalConsoleOptions = "neverOpen",
+        },
+        {
             name = "Debug Jest Tests NEW",
             type = "pwa-node",
             request = "launch",
