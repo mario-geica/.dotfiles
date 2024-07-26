@@ -3,7 +3,7 @@
 if [[ $# -eq 1 ]]; then
     selected=$1
 else
-    selected=$(find ~/hn/rebound ~/hn/rebound/bare/ ~/hn/rebound/bare/labels 1 -maxdepth 1 -type d | fzf)
+    selected=$(find ~/rebound/libs ~/rebound ~/rebound/labels ~/rebound/tracking ~/rebound/prealert 1 -maxdepth 1 -type d | fzf)
 fi
 
 if [[ -z $selected ]]; then

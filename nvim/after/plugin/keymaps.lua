@@ -38,6 +38,11 @@ nnoremap("n", "nzzzv")
 nnoremap("N", "Nzzzv")
 nnoremap("J", "mzJ`z")
 
+-- nnoremap("d", "\"_d")
+-- vnoremap("d", "\"_d")
+-- xnoremap <leader>p "_dP
+xnoremap("<leader>p", "\"_dP")
+
 inoremap("<C-c>", "<Esc>")
 nnoremap("<C-d>", "<C-d>zz")
 nnoremap("<C-u>", "<C-u>zz")

@@ -1,12 +1,12 @@
 vim.g.theprimeagen_colorscheme = "tokyonight"
 -- vim.cmd("colorscheme onedark")
 
-function ColorMyPencils()
+function colormypencils()
     vim.g.gruvbox_contrast_dark = 'hard'
     vim.g.tokyonight_transparent_sidebar = true
     vim.g.tokyonight_transparent = true
     vim.g.gruvbox_invert_selection = '0'
-    vim.opt.background = "dark"
+    -- vim.opt.background = "dark"
 
     vim.cmd("colorscheme " .. vim.g.theprimeagen_colorscheme)
 
@@ -14,31 +14,35 @@ function ColorMyPencils()
         vim.api.nvim_set_hl(0, thing, opts)
     end
 
-    hl("SignColumn", {
+    hl("signcolumn", {
         bg = "none",
     })
 
-    hl("ColorColumn", {
+    hl("colorcolumn", {
         ctermbg = 0,
         bg = "#555555",
     })
 
-    hl("CursorLineNR", {
-        bg = "None"
-    })
-
-    hl("Normal", {
+    hl("cursorlinenr", {
         bg = "none"
     })
 
-    hl("LineNr", {
+    hl("normal", {
+        bg = "none"
+    })
+
+    hl("linenr", {
         fg = "#5eacd3"
     })
 
-    hl("netrwDir", {
-        fg = "#5eacd3"
+    hl("netrwdir", {
+      fg = "#5eacd3"
     })
+
+    -- hl("Visual", {
+      -- bg = "#ede5ad" -- Setting background color to yellow
+    -- })
 
 end
 
-ColorMyPencils()
+colormypencils()

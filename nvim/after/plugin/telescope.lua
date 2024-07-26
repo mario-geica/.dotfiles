@@ -1,26 +1,41 @@
 local Remap = require("mmm.keymap")
 local nnoremap = Remap.nnoremap
 local actions = require('telescope.actions')
+local action_state = require('telescope.actions.state')
 require('telescope').setup{
   defaults = {
     mappings = {
       i = {
-        -- To disable a keymap, put [map] = false
-        -- So, to not map "<C-n>", just put
-        -- ["<C-n>"] = false,
-
-        -- Otherwise, just set the mapping to the function that you want it to be.
-        ["<C-w>"] = actions.select_vertical,
-
-        -- Add up multiple actions
-        -- ["<cr>"] = actions.select_default + actions.center,
-
-        -- You can perform as many actions in a row as you like
-        -- ["<cr>"] = actions.select_default + actions.center + my_cool_custom_action,
+        ["<C-x>"] = function(bufnr)
+          local selection = action_state.get_selected_entry()
+          actions.close(bufnr)
+          if selection then
+            -- Check if it's a buffer selection
+            if selection.bufnr then
+              vim.cmd('sbuffer ' .. selection.bufnr)
+              -- If not, assume it's a file and use its path
+            elseif selection.path then
+              vim.cmd('split ' .. selection.path)
+            else
+              print("Selection does not contain a buffer number or path.")
+            end
+          end
+        end,
+        ["<C-a>"] = function(bufnr)
+          local selection = action_state.get_selected_entry()
+          actions.close(bufnr)
+          if selection then
+            if selection.bufnr then
+              vim.cmd('vert sbuffer ' .. selection.bufnr)
+            elseif selection.path then
+              vim.cmd('vsplit ' .. selection.path)
+            else
+              print("Selection does not contain a buffer number or path.")
+            end
+          end
+        end,
       },
       n = {
-        -- ["<esc>"] = actions.close,
-        -- ["<C-i>"] = my_cool_custom_action,
       },
     },
   }
