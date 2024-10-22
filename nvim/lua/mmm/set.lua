@@ -3,7 +3,7 @@ vim.opt.clipboard="unnamedplus"
 vim.opt.wrap = true
 
 vim.opt.nu = true
-vim.opt.relativenumber = true
+vim.opt.relativenumber = false
 
 vim.opt.errorbells = false
 --set autoindent expandtab tabstop=2 shiftwidth=2
