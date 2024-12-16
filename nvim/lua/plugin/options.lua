@@ -26,4 +26,6 @@ vim.opt.termguicolors = true
 
 vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes"
-vim.opt.isfname:append("@-@")
+vim.opt.updatetime = 300  -- Faster completion
+vim.opt.mouse = 'a'  -- Enable mouse support
+vim.opt.fileencoding = "utf-8"
