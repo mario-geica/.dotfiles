@@ -1,5 +1,5 @@
 vim.opt.guicursor = ""
-vim.opt.clipboard="unnamedplus"
+vim.opt.clipboard = "unnamedplus"
 vim.opt.wrap = true
 
 vim.opt.nu = true
@@ -26,6 +26,6 @@ vim.opt.termguicolors = true
 
 vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes"
-vim.opt.updatetime = 300  -- Faster completion
-vim.opt.mouse = 'a'  -- Enable mouse support
+vim.opt.updatetime = 300 -- Faster completion
+vim.opt.mouse = 'a'      -- Enable mouse support
 vim.opt.fileencoding = "utf-8"
