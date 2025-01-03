@@ -22,6 +22,7 @@ return {
   {
     "pmizio/typescript-tools.nvim",
     dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+
     config = function()
       require("typescript-tools").setup {}
     end,
@@ -29,6 +30,7 @@ return {
   {
     "neovim/nvim-lspconfig",
     config = function()
+      local capabilities = require('blink.cmp').get_lsp_capabilities()
       local lspconfig = require("lspconfig")
 
       -- Global mappings.
@@ -64,15 +66,17 @@ return {
         end,
       })
 
-      -- Setup language servers
-      lspconfig.lua_ls.setup {}
-      lspconfig.html.setup {}
-      lspconfig.cssls.setup {}
-      lspconfig.emmet_ls.setup {}
+      local servers = { "lua_ls", "html", "cssls", "emmet_ls" }
+      for _, server in ipairs(servers) do
+        lspconfig[server].setup({
+          capabilities = capabilities
+        })
+      end
     end,
     dependencies = {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
+      "saghen/blink.cmp",
       {
         "folke/lazydev.nvim",
         ft = "lua", -- only load on lua files
