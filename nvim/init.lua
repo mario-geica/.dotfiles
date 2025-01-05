@@ -7,6 +7,7 @@ require("plugin.options")
 require("plugin.floaterminal")
 require("plugin.harpoon")
 
+
 vim.keymap.set("n", "<leader><leader>x", ":source %<CR>")
 vim.keymap.set("n", "<space>x", ":.lua<CR>")
 vim.keymap.set("v", "<space>x", ":lua<CR>")

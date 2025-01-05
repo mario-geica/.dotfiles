@@ -12,9 +12,9 @@ capabilities.textDocument.completion.completionItem.snippetSupport = true
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 require 'cmp'.setup {
-    sources = {
-        { name = 'nvim_lsp_signature_help' }
-    }
+  sources = {
+    { name = 'nvim_lsp_signature_help' }
+  }
 }
 -- Setup nvim-cmp.
 local cmp = require("cmp")
@@ -28,90 +28,81 @@ local cmp = require("cmp")
 local lspkind = require("lspkind")
 
 cmp.setup({
-    snippet = {
-        expand = function(args)
-            -- For `vsnip` user.
-            -- vim.fn["vsnip#anonymous"](args.body)
+  snippet = {
+    expand = function(args)
+      -- For `vsnip` user.
+      -- vim.fn["vsnip#anonymous"](args.body)
 
-            -- For `luasnip` user.
-            require("luasnip").lsp_expand(args.body)
+      -- For `luasnip` user.
+      require("luasnip").lsp_expand(args.body)
 
-            -- For `ultisnips` user.
-            -- vim.fn["UltiSnips#Anon"](args.body)
-        end,
+      -- For `ultisnips` user.
+      -- vim.fn["UltiSnips#Anon"](args.body)
+    end,
+  },
+  mapping = cmp.mapping.preset.insert({
+    ['<C-y>'] = cmp.mapping.confirm({ select = true }),
+    ['<C-b>'] = cmp.mapping.select_prev_item(),
+    ['<C-n>'] = cmp.mapping.select_next_item(),
+    ['<C-u>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-d>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<C-e>'] = cmp.mapping.close(),
+    ["<tab>"] = cmp.config.disable,
+    --       ['<CR>'] = cmp.mapping.confirm {
+    --          behavior = cmp.ConfirmBehavior.Replace,
+    --          select = true,
+    --      },
+    -- ['`'] = function(fallback)
+    --     if cmp.visible() then
+    --         cmp.select_next_item()
+    --     elseif luasnip.expand_or_jumpable() then
+    --         luasnip.expand_or_jump()
+    --     else
+    --         fallback()
+    --     end
+    -- end,
+    -- ['<C-h>'] = function()
+    --     luasnip.jumpable(-1)
+    --         luasnip.jump(-1)
+    -- end,
+  }),
+  formatting = {
+    -- Youtube: How to set up nice formatting for your sources.
+    format = lspkind.cmp_format {
+      with_text = true,
+      menu = {
+        nvim_lsp = "[LSP]",
+        nvim_lua = "[Lua]",
+        luasnip = "[Snip]",
+        buffer = "[Buff]",
+        path = "[path]",
+      },
     },
-    mapping = cmp.mapping.preset.insert({
-        ['<C-y>'] = cmp.mapping.confirm({ select = true }),
-        ['<C-b>'] = cmp.mapping.select_prev_item(),
-        ['<C-n>'] = cmp.mapping.select_next_item(),
-        ['<C-u>'] = cmp.mapping.scroll_docs(-4),
-        ['<C-d>'] = cmp.mapping.scroll_docs(4),
-        ['<C-Space>'] = cmp.mapping.complete(),
-        ['<C-e>'] = cmp.mapping.close(),
-        ["<tab>"] = cmp.config.disable,
-        --       ['<CR>'] = cmp.mapping.confirm {
-        --          behavior = cmp.ConfirmBehavior.Replace,
-        --          select = true,
-        --      },
-        -- ['`'] = function(fallback)
-        --     if cmp.visible() then
-        --         cmp.select_next_item()
-        --     elseif luasnip.expand_or_jumpable() then
-        --         luasnip.expand_or_jump()
-        --     else
-        --         fallback()
-        --     end
-        -- end,
-        -- ['<C-h>'] = function()
-        --     luasnip.jumpable(-1)
-        --         luasnip.jump(-1)
-        -- end,
-    }),
-    formatting = {
-        -- Youtube: How to set up nice formatting for your sources.
-        format = lspkind.cmp_format {
-            with_text = true,
-            menu = {
-                nvim_lsp = "[LSP]",
-                nvim_lua = "[Lua]",
-                luasnip = "[Snip]",
-                buffer = "[Buff]",
-                path = "[path]",
-            },
-        },
-    },
-    -- formatting = {
-    -- 	format = function(entry, vim_item)
-    -- 		vim_item.kind = lspkind.presets.default[vim_item.kind]
-    -- 		local menu = source_mapping[entry.source.name]
-    -- 		if entry.source.name == "cmp_tabnine" then
-    -- 			if entry.completion_item.data ~= nil and entry.completion_item.data.detail ~= nil then
-    -- 				menu = entry.completion_item.data.detail .. " " .. menu
-    -- 			end
-    -- 			vim_item.kind = ""
-    -- 		end
-    -- 		vim_item.menu = menu
-    -- 		return vim_item
-    -- 	end,
-    -- },
+  },
+  -- formatting = {
+  -- 	format = function(entry, vim_item)
+  -- 		vim_item.kind = lspkind.presets.default[vim_item.kind]
+  -- 		local menu = source_mapping[entry.source.name]
+  -- 		if entry.source.name == "cmp_tabnine" then
+  -- 			if entry.completion_item.data ~= nil and entry.completion_item.data.detail ~= nil then
+  -- 				menu = entry.completion_item.data.detail .. " " .. menu
+  -- 			end
+  -- 			vim_item.kind = ""
+  -- 		end
+  -- 		vim_item.menu = menu
+  -- 		return vim_item
+  -- 	end,
+  -- },
 
-    sources = {
+  sources = {
 
-        { name = "nvim_lsp" },
+    { name = "nvim_lsp" },
+    { name = "luasnip" },
+    { name = "buffer" },
+    { name = "path" },
 
-        -- For vsnip user.
-        -- { name = 'vsnip' },
-
-        -- For luasnip user.
-        { name = "luasnip" },
-
-        -- For ultisnips user.
-        -- { name = 'ultisnips' },
-
-        { name = "buffer" },
-        { name = "path" },
-
-    },
+  },
 })
 
 
@@ -170,19 +161,19 @@ cmp.setup({
 --             all_features = true,
 --         },
 --     }
-    -- settings = {
-    -- ["rust-analyzer"] = {
-    -- cargo = {
-    -- allFeatures = true,
-    -- },
-    -- completion = {
-    -- postfix = {
-    --  enable = false,
-    -- },
-    -- },
-    -- },
-    -- },
-    --[[
+-- settings = {
+-- ["rust-analyzer"] = {
+-- cargo = {
+-- allFeatures = true,
+-- },
+-- completion = {
+-- postfix = {
+--  enable = false,
+-- },
+-- },
+-- },
+-- },
+--[[
     --
     --]]
 -- })
@@ -213,18 +204,18 @@ cmp.setup({
 -- })
 
 local opts = {
-    -- whether to highlight the currently hovered symbol
-    -- disable if your cpu usage is higher than you want it
-    -- or you just hate the highlight
-    -- default: true
-    highlight_hovered_item = true,
-    -- whether to show outline guides
-    -- default: true
-    show_guides = true,
+  -- whether to highlight the currently hovered symbol
+  -- disable if your cpu usage is higher than you want it
+  -- or you just hate the highlight
+  -- default: true
+  highlight_hovered_item = true,
+  -- whether to show outline guides
+  -- default: true
+  show_guides = true,
 }
 
 require("symbols-outline").setup(opts)
 
 vim.diagnostic.config({
-    virtual_text = true
+  virtual_text = true
 })
