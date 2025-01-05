@@ -58,6 +58,7 @@ return {
         end,
       })
 
+
       -- Automatically configure LSP servers installed via Mason
       require("mason-lspconfig").setup_handlers({
         function(server_name)
@@ -85,68 +86,74 @@ return {
       },
     }
   },
-  {
-    "hrsh7th/nvim-cmp",
-    config = function()
-      local cmp = require("cmp")
-      local luasnip = require("luasnip")
-
-      -- Load friendly-snippets
-      require("luasnip.loaders.from_vscode").lazy_load()
-
-      cmp.setup({
-        snippet = {
-          expand = function(args)
-            luasnip.lsp_expand(args.body) -- Use LuaSnip for snippet expansion
-          end,
-        },
-        mapping = {
-          ['<C-y>'] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-              if cmp.confirm({ select = true }) then
-                -- If a snippet is selected, jump to the next placeholder
-                if luasnip.expand_or_jumpable() then
-                  luasnip.expand_or_jump()
-                end
-              end
-            else
-              fallback() -- Fallback to default behavior
-            end
-          end, { 'i', 's' }),
-          ['<C-b>'] = cmp.mapping.select_prev_item(),
-          ['<C-n>'] = cmp.mapping.select_next_item(),
-          ['<C-u>'] = cmp.mapping.scroll_docs(-4),
-          ['<C-d>'] = cmp.mapping.scroll_docs(4),
-          ['<C-Space>'] = cmp.mapping.complete(),
-          ['<C-e>'] = cmp.mapping.close(),
-          -- Snippet navigation
-          ['<C-j>'] = cmp.mapping(function(fallback)
-            if luasnip.expand_or_jumpable() then
-              luasnip.expand_or_jump()
-            else
-              fallback()
-            end
-          end, { 'i', 's' }),
-          ['<C-k>'] = cmp.mapping(function(fallback)
-            if luasnip.jumpable(-1) then
-              luasnip.jump(-1)
-            else
-              fallback()
-            end
-          end, { 'i', 's' }),
-        },
-        sources = cmp.config.sources({
-          { name = "nvim_lsp" },
-          { name = "luasnip" }, -- Add LuaSnip as a source
-          { name = "buffer" },
-          { name = "path" },
-        })
-      })
-    end,
-    dependencies = {
-      "L3MON4D3/LuaSnip",             -- Snippet engine
-      "rafamadriz/friendly-snippets", -- Pre-made snippets
-      "saadparwaiz1/cmp_luasnip",     -- LuaSnip source for nvim-cmp
-    },
-  }
 }
+--   {
+--     "hrsh7th/nvim-cmp",
+--     config = function()
+--       local cmp = require("cmp")
+--       local luasnip = require("luasnip")
+--
+--       -- Load friendly-snippets
+--       require("luasnip.loaders.from_vscode").lazy_load()
+--
+--       cmp.setup({
+--         snippet = {
+--           expand = function(args)
+--             print("Expanding snippet with body:", args.body)
+--             luasnip.lsp_expand(args.body) -- Use LuaSnip for snippet expansion
+--           end,
+--         },
+--
+--         mapping = {
+--           ['<C-y>'] = cmp.mapping(function(fallback)
+--             if cmp.visible() then
+--               -- Confirm the selection
+--               if cmp.confirm({ select = true }) then
+--                 print("Snippet confirmed and expanding...")
+--                 -- Jump to the next placeholder if it's a snippet
+--                 if luasnip.expand_or_jumpable() then
+--                   print("Snippet is expandable, jumping...")
+--                   luasnip.expand_or_jump()
+--                 end
+--               end
+--             else
+--               fallback() -- Fallback to default behavior
+--             end
+--           end, { 'i', 's' }),
+--           ['<C-b>'] = cmp.mapping.select_prev_item(),
+--           ['<C-n>'] = cmp.mapping.select_next_item(),
+--           ['<C-u>'] = cmp.mapping.scroll_docs(-4),
+--           ['<C-d>'] = cmp.mapping.scroll_docs(4),
+--           ['<C-Space>'] = cmp.mapping.complete(),
+--           ['<C-e>'] = cmp.mapping.close(),
+--           -- Snippet navigation
+--           ['<C-j>'] = cmp.mapping(function(fallback)
+--             if luasnip.expand_or_jumpable() then
+--               luasnip.expand_or_jump()
+--             else
+--               fallback()
+--             end
+--           end, { 'i', 's' }),
+--           ['<C-k>'] = cmp.mapping(function(fallback)
+--             if luasnip.jumpable(-1) then
+--               luasnip.jump(-1)
+--             else
+--               fallback()
+--             end
+--           end, { 'i', 's' }),
+--         },
+--         sources = cmp.config.sources({
+--           -- { name = "nvim_lsp" },
+--           { name = "luasnip" }, -- Add LuaSnip as a source
+--           -- { name = "buffer" },
+--           -- { name = "path" },
+--         })
+--       })
+--     end,
+--     dependencies = {
+--       "L3MON4D3/LuaSnip",             -- Snippet engine
+--       "rafamadriz/friendly-snippets", -- Pre-made snippets
+--       "saadparwaiz1/cmp_luasnip",     -- LuaSnip source for nvim-cmp
+--     },
+--   }
+-- }

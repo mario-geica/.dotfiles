@@ -1,12 +1,10 @@
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
-
 require("config.lazy")
 require("plugin.keymaps")
 require("plugin.options")
 require("plugin.floaterminal")
 require("plugin.harpoon")
-
 
 vim.keymap.set("n", "<leader><leader>x", ":source %<CR>")
 vim.keymap.set("n", "<space>x", ":.lua<CR>")
