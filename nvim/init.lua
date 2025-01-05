@@ -7,7 +7,7 @@ require("plugin.options")
 require("plugin.floaterminal")
 require("plugin.harpoon")
 
-vim.keymap.set("n", "<space><space>x", "<cmd>source %<CR>")
+vim.keymap.set("n", "<leader><leader>x", ":source %<CR>")
 vim.keymap.set("n", "<space>x", ":.lua<CR>")
 vim.keymap.set("v", "<space>x", ":lua<CR>")
 
@@ -25,7 +25,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 vim.api.nvim_create_autocmd("BufWritePre", {
   group = vim.api.nvim_create_augroup("FormatOnSave", { clear = true }),
   callback = function()
-    vim.lsp.buf.format({ async = false })
+    vim.lsp.buf.format({ async = false, })
   end,
 })
 
