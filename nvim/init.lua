@@ -5,6 +5,7 @@ require("config.lazy")
 require("plugin.keymaps")
 require("plugin.options")
 require("plugin.floaterminal")
+require("plugin.harpoon")
 
 vim.keymap.set("n", "<space><space>x", "<cmd>source %<CR>")
 vim.keymap.set("n", "<space>x", ":.lua<CR>")
