@@ -13,6 +13,29 @@ return {
             theme = "ivy"
           }
         },
+        defaults = {
+          mappings = {
+            i = {
+              ["<C-w>d"] = function(prompt_bufnr)
+                local action_state = require('telescope.actions.state')
+                local entry = action_state.get_selected_entry()
+                require('telescope.actions').close(prompt_bufnr) -- Close Telescope
+                vim.schedule(function()
+                  vim.cmd('vsplit ' .. entry.value)              -- Open file in a vertical split
+                end)
+              end,
+              ["<C-w>s"] = function(prompt_bufnr)
+                local action_state = require('telescope.actions.state')
+                local entry = action_state.get_selected_entry()
+                require('telescope.actions').close(prompt_bufnr) -- Close Telescope
+                vim.schedule(function()
+                  vim.cmd('split ' .. entry.value)               -- Open file in a horizontal split
+                end)
+              end,
+            },
+
+          },
+        },
         extensions = {
           fzf = {}
         }
