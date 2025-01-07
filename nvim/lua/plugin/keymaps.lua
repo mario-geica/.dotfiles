@@ -1,8 +1,7 @@
 local set = vim.keymap.set
 
 
-set("n", "<space>nt", ":Neotree toggle<CR>")
-set("n", "<space><Right>", ":Neotree toggle<CR>")
+set("n", "<space><Right>", ":NvimTreeToggle<CR>")
 set("n", "<leader>bn", ":bNext<CR>")
 set("n", "<leader>bp", ":bprevious<CR>")
 set("n", "<leader>bc", " :bdelete<CR>")
