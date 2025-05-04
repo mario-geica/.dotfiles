@@ -10,6 +10,7 @@ return {
     config = function()
       require("mason-lspconfig").setup({
         ensure_installed = {
+          "clangd",
           "lua_ls", -- Lua
           "html",   -- HTML
           "cssls",  -- CSS
@@ -61,6 +62,19 @@ return {
 
       -- Automatically configure LSP servers installed via Mason
       require("mason-lspconfig").setup_handlers({
+        ["clangd"] = function()
+          lspconfig.clangd.setup({
+            capabilities = capabilities,
+            cmd = {
+              "clangd",
+              "--background-index",
+              "--clang-tidy",
+              "--completion-style=detailed",
+              "--header-insertion=iwyu",
+              "--query-driver=/usr/bin/*,/usr/local/bin/*",
+            },
+          })
+        end,
         function(server_name)
           lspconfig[server_name].setup({
             capabilities = capabilities,

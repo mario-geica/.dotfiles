@@ -2,6 +2,8 @@ local set = vim.keymap.set
 
 set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 set("n", "<space><Right>", ":NvimTreeToggle<CR>")
+set("n", "<leader>gb", ":Gitsigns toggle_current_line_blame<CR>", { desc = "Toggle git blame" })
+set("n", "<leader>gB", ":Gitsigns blame_line<CR>", { desc = "Show detailed git blame" })
 set("n", "<leader>bn", ":bNext<CR>")
 set("n", "<leader>bp", ":bprevious<CR>")
 set("n", "<leader>bc", " :bdelete<CR>")
