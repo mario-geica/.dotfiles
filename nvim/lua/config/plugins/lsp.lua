@@ -11,28 +11,51 @@ return {
       require("mason-lspconfig").setup({
         ensure_installed = {
           "clangd",
-          "lua_ls", -- Lua
-          "html",   -- HTML
-          "cssls",  -- CSS
-          -- "emmet_ls",                  -- Emmet
+          "lua_ls",
+          "html",
+          "cssls",
+          "ts_ls"
         },
-        automatic_installation = true, -- Automatically install LSP servers
+        automatic_installation = true,
+        handlers = {
+          -- Default handler for all servers
+          function(server_name)
+            local capabilities = vim.lsp.protocol.make_client_capabilities()
+            require("lspconfig")[server_name].setup({
+              capabilities = capabilities,
+            })
+          end,
+          -- Override for clangd - skip it here since we set it up manually
+          ["clangd"] = function() end,
+        }
       })
     end
   },
   {
     "neovim/nvim-lspconfig",
     config = function()
-      local capabilities = require('cmp_nvim_lsp').default_capabilities()
+      vim.diagnostic.config({
+        virtual_text = {
+          prefix = '●', -- The icon before the error message
+          spacing = 4, -- Space between your code and the error text
+          -- severity = vim.diagnostic.severity.WARN,  -- Uncomment to only show warnings and errors
+        }, -- This enables inline errors
+        signs = true,
+        underline = true,
+        update_in_insert = false,
+        severity_sort = true,
+      })
+      -- Use default capabilities (blink.cmp doesn't need special setup)
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
       local lspconfig = require("lspconfig")
 
-      -- Global mappings.
+      -- Your keymaps
       vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
       vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
       vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
       vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
 
-      -- Use LspAttach autocommand
+      -- LspAttach autocommand
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('UserLspConfig', {}),
         callback = function(ev)
@@ -56,44 +79,46 @@ return {
             print("Formatting")
             vim.lsp.buf.format { async = true }
           end, opts)
+          -- Auto-trigger signature help when typing (
+          vim.keymap.set('i', '(', function()
+            vim.fn.feedkeys('(', 'n') -- Insert the ( character
+            vim.defer_fn(function()   -- Small delay to let LSP catch up
+              vim.lsp.buf.signature_help()
+            end, 50)
+          end, opts)
         end,
       })
 
+      -- Simple server setup - avoiding setup_handlers
+      -- local servers = { "clangd", "lua_ls", "html", "cssls", "ts_ls" }
+      -- for _, server_name in ipairs(servers) do
+      --   lspconfig[server_name].setup({
+      --     capabilities = capabilities,
+      --   })
+      -- end
 
-      -- Automatically configure LSP servers installed via Mason
-      require("mason-lspconfig").setup_handlers({
-        ["clangd"] = function()
-          lspconfig.clangd.setup({
-            capabilities = capabilities,
-            cmd = {
-              "clangd",
-              "--background-index",
-              "--clang-tidy",
-              "--completion-style=detailed",
-              "--header-insertion=iwyu",
-              "--query-driver=/usr/bin/*,/usr/local/bin/*",
-            },
-          })
-        end,
-        function(server_name)
-          lspconfig[server_name].setup({
-            capabilities = capabilities,
-          })
-        end,
+      -- Special config for clangd if needed
+      lspconfig.clangd.setup({
+        capabilities = capabilities,
+        cmd = {
+          "clangd",
+          "--background-index",
+          "--clang-tidy",
+          "--completion-style=detailed",
+          "--header-insertion=iwyu",
+          "--query-driver=/usr/bin/*,/usr/local/bin/*",
+        },
       })
     end,
     dependencies = {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/nvim-cmp",
+      -- Removed cmp-nvim-lsp since we're using blink
       {
         "folke/lazydev.nvim",
-        ft = "lua", -- only load on lua files
+        ft = "lua",
         opts = {
           library = {
-            -- See the configuration section for more details
-            -- Load luvit types when the vim.uv word is found
             { path = "${3rd}/luv/library", words = { "vim%.uv" } },
           },
         },

@@ -1,5 +1,24 @@
 local set = vim.keymap.set
 
+
+set("n", "]e", function()
+  vim.diagnostic.jump({
+    count = 1,
+    severity = vim.diagnostic.severity.ERROR,
+    float = true -- Shows diagnostic in floating window
+  })
+end, { desc = "Go to next error" })
+
+set("n", "[e", function()
+  vim.diagnostic.jump({
+    count = -1,
+    severity = vim.diagnostic.severity.ERROR,
+    float = true -- Shows diagnostic in floating window
+  })
+end, { desc = "Go to previous error" })
+
+set('i', '<C-s>', vim.lsp.buf.signature_help, opts)
+
 set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 set("n", "<space><Right>", ":NvimTreeToggle<CR>")
 set("n", "<leader>gb", ":Gitsigns toggle_current_line_blame<CR>", { desc = "Toggle git blame" })

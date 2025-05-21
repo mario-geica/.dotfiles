@@ -14,7 +14,7 @@ return {
     dependencies = {
       "rafamadriz/friendly-snippets",
       "moyiz/blink-emoji.nvim",
-      "ray-x/cmp-sql",
+      -- "ray-x/cmp-sql",
     },
 
     -- use a release tag to download pre-built binaries
