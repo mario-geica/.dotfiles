@@ -46,6 +46,14 @@ return {
       vim.keymap.set("n", "<leader>gs", function()
         require('telescope.builtin').grep_string({ search = vim.fn.input("Grep For > ") })
       end)
+      vim.keymap.set("n", "<leader>gn", function()
+        require('telescope.builtin').grep_string({
+          search = vim.fn.input("Grep For > "),
+          additional_args = function()
+            return { "--no-ignore-vcs", "--hidden" }
+          end
+        })
+      end)
       vim.keymap.set("n", "<space>fh", require('telescope.builtin').help_tags)
       vim.keymap.set("n", "<space>ff", require('telescope.builtin').find_files)
 

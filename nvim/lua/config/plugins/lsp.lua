@@ -37,7 +37,7 @@ return {
       vim.diagnostic.config({
         virtual_text = {
           prefix = '●', -- The icon before the error message
-          spacing = 4, -- Space between your code and the error text
+          spacing = 2, -- Space between your code and the error text
           -- severity = vim.diagnostic.severity.WARN,  -- Uncomment to only show warnings and errors
         }, -- This enables inline errors
         signs = true,
