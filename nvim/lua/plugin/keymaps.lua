@@ -1,5 +1,8 @@
 local set = vim.keymap.set
 
+set('n', '<leader>lg', function()
+  vim.cmd('terminal lazygit')
+end, { desc = 'Open lazygit' })
 
 set("n", "]e", function()
   vim.diagnostic.jump({
@@ -16,6 +19,9 @@ set("n", "[e", function()
     float = true -- Shows diagnostic in floating window
   })
 end, { desc = "Go to previous error" })
+
+set('n', '<M-Right>', ':tabnext<CR>')
+set('n', '<M-Left>', ':tabprev<CR>')
 
 set('i', '<C-s>', vim.lsp.buf.signature_help, opts)
 
@@ -67,3 +73,80 @@ set('n', '<leader>wh', ':wincmd H<CR>', { noremap = true, silent = true })
 set('n', '<leader>wl', ':wincmd L<CR>', { noremap = true, silent = true })
 set('n', '<leader>wj', ':wincmd J<CR>', { noremap = true, silent = true })
 set('n', '<leader>wk', ':wincmd K<CR>', { noremap = true, silent = true })
+
+
+set("n", "<leader>cf", function()
+  vim.fn.setreg('+', vim.fn.expand('%:t'))
+  print("Copied filename: " .. vim.fn.expand('%:t'))
+end, { desc = "Copy filename" })
+
+-- Copy full path
+set("n", "<leader>cp", function()
+  vim.fn.setreg('+', vim.fn.expand('%:p'))
+  print("Copied full path: " .. vim.fn.expand('%:p'))
+end, { desc = "Copy full path" })
+
+-- Copy relative path
+set("n", "<leader>cr", function()
+  vim.fn.setreg('+', vim.fn.expand('%'))
+  print("Copied relative path: " .. vim.fn.expand('%'))
+end, { desc = "Copy relative path" })
+
+
+local function test_goto_implementation()
+  local current_line = vim.api.nvim_get_current_line()
+  local cursor_pos = vim.api.nvim_win_get_cursor(0)
+  local col = cursor_pos[2]
+
+  print("Current line: " .. current_line)
+  print("Cursor position: " .. col)
+
+  -- Extract module name from require() or import
+  local module_patterns = {
+    "require%(['\"]([^'\"]+)['\"]%)",   -- require('module')
+    "from%s+['\"]([^'\"]+)['\"]",       -- import ... from 'module'
+    "import%s*%(['\"]([^'\"]+)['\"]%)", -- import('module')
+  }
+
+  local module_name = nil
+  for _, pattern in ipairs(module_patterns) do
+    module_name = current_line:match(pattern)
+    if module_name then
+      print("Found module: " .. module_name)
+      break
+    end
+  end
+
+  if not module_name then
+    print("No module found on this line")
+    return
+  end
+
+  -- Try different paths
+  local base_paths = {
+    "node_modules/" .. module_name .. ".js",
+    "node_modules/" .. module_name .. "/index.js",
+    "node_modules/" .. module_name .. "/lib/index.js",
+    "node_modules/" .. module_name .. "/dist/index.js",
+    "node_modules/" .. module_name .. "/src/index.js",
+  }
+
+  print("Trying paths:")
+  for _, path in ipairs(base_paths) do
+    print("  " .. path .. " -> " .. (vim.fn.filereadable(path) == 1 and "EXISTS" or "not found"))
+    if vim.fn.filereadable(path) == 1 then
+      print("Opening: " .. path)
+      vim.cmd("edit " .. path)
+      return
+    end
+  end
+
+  print("No source file found, checking package.json...")
+  local pkg_path = "node_modules/" .. module_name .. "/package.json"
+  if vim.fn.filereadable(pkg_path) == 1 then
+    print("Found package.json: " .. pkg_path)
+  end
+end
+
+-- Map it to test
+vim.keymap.set('n', '<leader>ti', test_goto_implementation, { desc = "Test goto implementation" })
