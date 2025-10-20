@@ -1,26 +1,42 @@
--- Pure native LSP configuration - no nvim-lspconfig needed!
+-- Production-ready LSP configuration with nvim-cmp
 return {
+  -- Mason: LSP server installer
   {
     "williamboman/mason.nvim",
     config = function()
-      require("mason").setup()
+      require("mason").setup({
+        ui = {
+          border = "rounded",
+          icons = {
+            package_installed = "✓",
+            package_pending = "➜",
+            package_uninstalled = "✗"
+          }
+        }
+      })
     end
   },
+
+  -- Mason-lspconfig: Bridge between mason and lspconfig
   {
     "williamboman/mason-lspconfig.nvim",
+    dependencies = { "williamboman/mason.nvim" },
+  },
+
+  -- LSP Configuration
+  {
+    "neovim/nvim-lspconfig",
+    dependencies = {
+      "williamboman/mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
+      "hrsh7th/cmp-nvim-lsp",
+    },
     config = function()
-      require("mason-lspconfig").setup({
-        ensure_installed = {
-          "clangd",
-          "lua_ls",
-          "html",
-          "cssls",
-          "eslint",
-          "ts_ls",
-          "jsonls",
-        },
-        automatic_installation = true,
-      })
+      local lspconfig = require("lspconfig")
+      local mason_lspconfig = require("mason-lspconfig")
+
+      -- Get capabilities from cmp_nvim_lsp
+      local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
       -- Configure diagnostics
       vim.diagnostic.config({
@@ -32,82 +48,103 @@ return {
         underline = true,
         update_in_insert = false,
         severity_sort = true,
+        float = {
+          border = "rounded",
+          source = "always",
+        },
       })
 
-      -- Your keymaps
-      vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
-      vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-      vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
-      vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
+      -- Diagnostic signs
+      local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
+      for type, icon in pairs(signs) do
+        local hl = "DiagnosticSign" .. type
+        vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+      end
 
-      -- LspAttach autocommand
+      -- Global diagnostic keymaps
+      vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, { desc = "Show diagnostic" })
+      vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
+      vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = "Next diagnostic" })
+      vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, { desc = "Diagnostic list" })
+
+      -- LspAttach autocommand for keymaps
       vim.api.nvim_create_autocmd('LspAttach', {
-        group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+        group = vim.api.nvim_create_augroup('UserLspConfig', { clear = true }),
         callback = function(ev)
-          vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
           local opts = { buffer = ev.buf }
-          vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-          vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-          vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-          vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-          vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-          vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
-          vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
+
+          vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, vim.tbl_extend('force', opts, { desc = "Go to declaration" }))
+          vim.keymap.set('n', 'gd', vim.lsp.buf.definition, vim.tbl_extend('force', opts, { desc = "Go to definition" }))
+          vim.keymap.set('n', 'K', vim.lsp.buf.hover, vim.tbl_extend('force', opts, { desc = "Hover documentation" }))
+          vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, vim.tbl_extend('force', opts, { desc = "Go to implementation" }))
+          vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, vim.tbl_extend('force', opts, { desc = "Signature help" }))
+          vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, vim.tbl_extend('force', opts, { desc = "Add workspace folder" }))
+          vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, vim.tbl_extend('force', opts, { desc = "Remove workspace folder" }))
           vim.keymap.set('n', '<space>wl', function()
             print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-          end, opts)
-          vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
-          vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
-          vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
-          vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+          end, vim.tbl_extend('force', opts, { desc = "List workspace folders" }))
+          vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, vim.tbl_extend('force', opts, { desc = "Type definition" }))
+          vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, vim.tbl_extend('force', opts, { desc = "Rename" }))
+          vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, vim.tbl_extend('force', opts, { desc = "Code action" }))
+          vim.keymap.set('n', 'gr', vim.lsp.buf.references, vim.tbl_extend('force', opts, { desc = "References" }))
           vim.keymap.set('n', '<space>fc', function()
             vim.lsp.buf.format { async = true }
-          end, opts)
+          end, vim.tbl_extend('force', opts, { desc = "Format code" }))
         end,
       })
 
-      -- Configure LSP servers using native Neovim APIs
-      -- Basic servers with default configs
-      vim.lsp.config('lua_ls', {
-        cmd = { 'lua-language-server' },
-        filetypes = { 'lua' },
-        root_markers = { '.luarc.json', '.luarc.jsonc', '.git' },
-      })
-
-      vim.lsp.config('html', {
-        cmd = { 'vscode-html-language-server', '--stdio' },
-        filetypes = { 'html' },
-        root_markers = { 'package.json', '.git' },
-      })
-
-      vim.lsp.config('cssls', {
-        cmd = { 'vscode-css-language-server', '--stdio' },
-        filetypes = { 'css', 'scss', 'less' },
-        root_markers = { 'package.json', '.git' },
-      })
-
-      vim.lsp.config('eslint', {
-        cmd = { 'vscode-eslint-language-server', '--stdio' },
-        filetypes = {
-          'javascript',
-          'javascriptreact',
-          'typescript',
-          'typescriptreact',
-          'vue',
-          'svelte'
+      -- Mason-managed servers
+      mason_lspconfig.setup({
+        ensure_installed = {
+          "ts_ls",      -- TypeScript/JavaScript
+          "eslint",     -- ESLint
+          "lua_ls",     -- Lua
+          "html",       -- HTML
+          "cssls",      -- CSS
+          "jsonls",     -- JSON
         },
-        root_markers = {
-          '.eslintrc.js',
-          '.eslintrc.cjs',
-          '.eslintrc.yaml',
-          '.eslintrc.yml',
-          '.eslintrc.json',
-          'eslint.config.js',
-          'eslint.config.mjs',
-          'eslint.config.cjs',
-          'package.json',
-          '.git'
-        },
+        automatic_installation = true,
+      })
+
+      -- TypeScript/JavaScript LSP
+      lspconfig.ts_ls.setup({
+        capabilities = capabilities,
+        settings = {
+          typescript = {
+            inlayHints = {
+              includeInlayParameterNameHints = 'all',
+              includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+              includeInlayFunctionParameterTypeHints = true,
+              includeInlayVariableTypeHints = true,
+              includeInlayPropertyDeclarationTypeHints = true,
+              includeInlayFunctionLikeReturnTypeHints = true,
+              includeInlayEnumMemberValueHints = true,
+            }
+          },
+          javascript = {
+            inlayHints = {
+              includeInlayParameterNameHints = 'all',
+              includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+              includeInlayFunctionParameterTypeHints = true,
+              includeInlayVariableTypeHints = true,
+              includeInlayPropertyDeclarationTypeHints = true,
+              includeInlayFunctionLikeReturnTypeHints = true,
+              includeInlayEnumMemberValueHints = true,
+            }
+          }
+        }
+      })
+
+      -- ESLint LSP with auto-fix on save
+      lspconfig.eslint.setup({
+        capabilities = capabilities,
+        on_attach = function(client, bufnr)
+          -- Auto-fix on save
+          vim.api.nvim_create_autocmd("BufWritePre", {
+            buffer = bufnr,
+            command = "EslintFixAll",
+          })
+        end,
         settings = {
           codeAction = {
             disableRuleComment = {
@@ -119,93 +156,146 @@ return {
             }
           },
           codeActionOnSave = {
-            enable = false,
+            enable = true,
             mode = "all"
-          },
-          experimental = {
-            useFlatConfig = false
           },
           format = true,
           nodePath = "",
           onIgnoredFiles = "off",
-          problems = {
-            shortenToSingleLine = false
-          },
+          packageManager = "npm",
           quiet = false,
           rulesCustomizations = {},
           run = "onType",
           useESLintClass = false,
           validate = "on",
           workingDirectory = {
-            mode = "location"
-          }
-        },
-        -- This is crucial for fixing the path error
-        on_attach = function(client, bufnr)
-          -- Ensure the working directory is set correctly
-          if client.config.settings then
-            client.config.settings.workingDirectory = {
-              mode = "auto"
-            }
-          end
-        end
-      })
-
-      vim.lsp.config('ts_ls', {
-        cmd = { 'typescript-language-server', '--stdio' },
-        filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
-        root_markers = { 'package.json', 'tsconfig.json', 'jsconfig.json', '.git' },
-      })
-
-      vim.lsp.config('jsonls', {
-        cmd = { 'vscode-json-language-server', '--stdio' },
-        filetypes = { 'json', 'jsonc' },
-        root_markers = { 'package.json', '.git' },
-        settings = {
-          json = {
-            schemas = {},
-            validate = { enable = true },
-            format = {
-              enable = true,
-              keepLines = false
-            }
+            mode = "auto"
           }
         }
       })
 
-      vim.lsp.config('clangd', {
-        cmd = {
-          "clangd",
-          "--background-index",
-          "--clang-tidy",
-          "--completion-style=detailed",
-          "--header-insertion=iwyu",
-          "--query-driver=/usr/bin/*,/usr/local/bin/*",
-        },
-        filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto' },
-        root_markers = {
-          'Makefile',
-          'configure.in',
-          'configure.ac',
-          '.git',
-          'compile_commands.json',
-          'compile_flags.txt'
+      -- Lua LSP
+      lspconfig.lua_ls.setup({
+        capabilities = capabilities,
+        settings = {
+          Lua = {
+            runtime = {
+              version = 'LuaJIT'
+            },
+            diagnostics = {
+              globals = { 'vim' },
+            },
+            workspace = {
+              library = vim.api.nvim_get_runtime_file("", true),
+              checkThirdParty = false,
+            },
+            telemetry = {
+              enable = false,
+            },
+          },
         },
       })
 
-      -- Enable all servers
-      vim.lsp.enable({
-        'clangd',
-        'lua_ls',
-        'html',
-        'cssls',
-        'eslint',
-        'ts_ls',
-        'jsonls'
+      -- HTML LSP
+      lspconfig.html.setup({
+        capabilities = capabilities,
+      })
+
+      -- CSS LSP
+      lspconfig.cssls.setup({
+        capabilities = capabilities,
+      })
+
+      -- JSON LSP
+      lspconfig.jsonls.setup({
+        capabilities = capabilities,
+        settings = {
+          json = {
+            schemas = require('schemastore').json.schemas(),
+            validate = { enable = true },
+          }
+        }
       })
     end,
+  },
+
+  -- JSON schemas for jsonls
+  {
+    "b0o/schemastore.nvim",
+  },
+
+  -- nvim-cmp: Autocompletion
+  {
+    "hrsh7th/nvim-cmp",
+    event = "InsertEnter",
     dependencies = {
-      "williamboman/mason.nvim",
-    }
+      "hrsh7th/cmp-nvim-lsp",     -- LSP completion source
+      "hrsh7th/cmp-buffer",        -- Buffer completion source
+      "hrsh7th/cmp-path",          -- Path completion source
+      "L3MON4D3/LuaSnip",          -- Snippet engine
+      "saadparwaiz1/cmp_luasnip",  -- Snippet completion source
+      "rafamadriz/friendly-snippets", -- Snippet collection
+    },
+    config = function()
+      local cmp = require("cmp")
+      local luasnip = require("luasnip")
+
+      -- Load friendly-snippets
+      require("luasnip.loaders.from_vscode").lazy_load()
+
+      cmp.setup({
+        snippet = {
+          expand = function(args)
+            luasnip.lsp_expand(args.body)
+          end,
+        },
+        window = {
+          completion = cmp.config.window.bordered(),
+          documentation = cmp.config.window.bordered(),
+        },
+        mapping = cmp.mapping.preset.insert({
+          ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+          ['<C-f>'] = cmp.mapping.scroll_docs(4),
+          ['<C-Space>'] = cmp.mapping.complete(),
+          ['<C-e>'] = cmp.mapping.abort(),
+          ['<CR>'] = cmp.mapping.confirm({ select = true }),
+          ['<Tab>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_next_item()
+            elseif luasnip.expand_or_jumpable() then
+              luasnip.expand_or_jump()
+            else
+              fallback()
+            end
+          end, { 'i', 's' }),
+          ['<S-Tab>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_prev_item()
+            elseif luasnip.jumpable(-1) then
+              luasnip.jump(-1)
+            else
+              fallback()
+            end
+          end, { 'i', 's' }),
+        }),
+        sources = cmp.config.sources({
+          { name = 'nvim_lsp', priority = 1000 },
+          { name = 'luasnip', priority = 750 },
+          { name = 'buffer', priority = 500 },
+          { name = 'path', priority = 250 },
+        }),
+        formatting = {
+          format = function(entry, vim_item)
+            vim_item.menu = ({
+              nvim_lsp = "[LSP]",
+              luasnip = "[Snippet]",
+              buffer = "[Buffer]",
+              path = "[Path]",
+            })[entry.source.name]
+            return vim_item
+          end
+        },
+      })
+    end,
   },
 }

@@ -26,10 +26,15 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+-- Format on save (ESLint handles JS/TS files via lsp.lua)
 vim.api.nvim_create_autocmd("BufWritePre", {
   group = vim.api.nvim_create_augroup("FormatOnSave", { clear = true }),
   callback = function()
-    vim.lsp.buf.format({ async = false, })
+    -- Only format if not a JS/TS file (ESLint handles those)
+    local ft = vim.bo.filetype
+    if ft ~= "javascript" and ft ~= "javascriptreact" and ft ~= "typescript" and ft ~= "typescriptreact" then
+      vim.lsp.buf.format({ async = false })
+    end
   end,
 })
 
