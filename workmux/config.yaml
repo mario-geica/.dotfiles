@@ -1,0 +1,9 @@
+nerdfont: true
+agent: claude
+merge_strategy: squash
+
+panes:
+  - command: <agent>
+    focus: true
+  - split: vertical
+    percentage: 30
