@@ -2,6 +2,15 @@ nerdfont: true
 agent: claude
 merge_strategy: squash
 
+# New worktrees are clean checkouts: no .env, no node_modules.
+# These global file ops fix that for every project (per-project
+# .workmux.yaml can extend with '<global>' + project-specific entries).
+files:
+  symlink:
+    - node_modules
+  copy:
+    - .env
+
 panes:
   - command: <agent>
     focus: true
