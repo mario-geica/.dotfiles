@@ -4,7 +4,6 @@ vim.opt.winborder = 'rounded'
 
 require("config.lazy")
 require("plugin.keymaps")
--- require("plugin.jstsfind")
 require("plugin.jsf")
 require("plugin.options")
 require("plugin.floaterminal")

@@ -19,7 +19,6 @@ return {
         'markdown',
         'markdown_inline',
         'json',
-        'jsonc',
         'yaml',
         'toml',
         'bash',

@@ -38,8 +38,8 @@ return {
 
       -- Global diagnostic keymaps
       vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, { desc = "Show diagnostic" })
-      vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
-      vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = "Next diagnostic" })
+      vim.keymap.set('n', '[d', function() vim.diagnostic.jump({ count = -1 }) end, { desc = "Previous diagnostic" })
+      vim.keymap.set('n', ']d', function() vim.diagnostic.jump({ count = 1 }) end, { desc = "Next diagnostic" })
       vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, { desc = "Diagnostic list" })
 
       -- LspAttach autocommand for keymaps
