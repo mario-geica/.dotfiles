@@ -178,6 +178,19 @@ return {
           }
         }
       })
+
+      -- Python: pyright (types/hover/goto/rename) + ruff (lint/format)
+      lspconfig.pyright.setup({
+        capabilities = capabilities,
+      })
+
+      lspconfig.ruff.setup({
+        capabilities = capabilities,
+        -- Let pyright own hover; ruff handles diagnostics/format/imports
+        on_attach = function(client, _)
+          client.server_capabilities.hoverProvider = false
+        end,
+      })
     end,
   },
 
