@@ -1,39 +1,14 @@
 -- Production-ready LSP configuration with nvim-cmp
+-- LSP servers are provided by NixOS (see configuration.nix), not Mason.
 return {
-  -- Mason: LSP server installer
-  {
-    "williamboman/mason.nvim",
-    config = function()
-      require("mason").setup({
-        ui = {
-          border = "rounded",
-          icons = {
-            package_installed = "✓",
-            package_pending = "➜",
-            package_uninstalled = "✗"
-          }
-        }
-      })
-    end
-  },
-
-  -- Mason-lspconfig: Bridge between mason and lspconfig
-  {
-    "williamboman/mason-lspconfig.nvim",
-    dependencies = { "williamboman/mason.nvim" },
-  },
-
   -- LSP Configuration
   {
     "neovim/nvim-lspconfig",
     dependencies = {
-      "williamboman/mason.nvim",
-      "williamboman/mason-lspconfig.nvim",
       "hrsh7th/cmp-nvim-lsp",
     },
     config = function()
       local lspconfig = require("lspconfig")
-      local mason_lspconfig = require("mason-lspconfig")
 
       -- Get capabilities from cmp_nvim_lsp
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
@@ -91,19 +66,6 @@ return {
             vim.lsp.buf.format { async = true }
           end, vim.tbl_extend('force', opts, { desc = "Format code" }))
         end,
-      })
-
-      -- Mason-managed servers
-      mason_lspconfig.setup({
-        ensure_installed = {
-          "ts_ls",      -- TypeScript/JavaScript
-          "eslint",     -- ESLint
-          "lua_ls",     -- Lua
-          "html",       -- HTML
-          "cssls",      -- CSS
-          "jsonls",     -- JSON
-        },
-        automatic_installation = true,
       })
 
       -- TypeScript/JavaScript LSP
